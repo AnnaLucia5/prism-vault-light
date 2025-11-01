@@ -3,29 +3,52 @@ import type { TaskArguments } from "hardhat/types";
 
 task("task:submitSalary")
   .addParam("salary", "The salary amount to submit (in dollars)")
+  .addOptionalParam("contract", "Contract address (optional, deploys new if not provided)")
   .setAction(async function (taskArguments: TaskArguments, { ethers, fhevm }) {
-    const { salary } = taskArguments;
-    const SalaryCompare = await ethers.getContractFactory("SalaryCompare");
-    const salaryCompare = await SalaryCompare.deploy();
-    await salaryCompare.waitForDeployment();
-    const salaryCompareAddress = await salaryCompare.getAddress();
-    
+    const { salary, contract } = taskArguments;
+
     const [signer] = await ethers.getSigners();
-    
-    console.log(`Submitting salary ${salary} for address ${signer.address}...`);
-    
-    const encryptedSalary = await fhevm
-      .createEncryptedInput(salaryCompareAddress, signer.address)
-      .add32(parseInt(salary))
-      .encrypt();
-    
-    const tx = await salaryCompare.submitSalary(
-      encryptedSalary.handles[0],
-      encryptedSalary.inputProof
-    );
-    
-    await tx.wait();
-    console.log(`Salary submitted successfully! Transaction: ${tx.hash}`);
+    console.log(`👤 Using signer: ${signer.address}`);
+
+    let salaryCompareAddress: string;
+    let salaryCompare: any;
+
+    if (contract) {
+      console.log(`📄 Using existing contract at: ${contract}`);
+      salaryCompare = await ethers.getContractAt("SalaryCompare", contract);
+      salaryCompareAddress = contract;
+    } else {
+      console.log("🚀 Deploying new SalaryCompare contract...");
+      const SalaryCompareFactory = await ethers.getContractFactory("SalaryCompare");
+      salaryCompare = await SalaryCompareFactory.deploy();
+      await salaryCompare.waitForDeployment();
+      salaryCompareAddress = await salaryCompare.getAddress();
+      console.log(`✅ Contract deployed at: ${salaryCompareAddress}`);
+    }
+
+    console.log(`💰 Submitting salary $${salary} for address ${signer.address}...`);
+
+    try {
+      const encryptedSalary = await fhevm
+        .createEncryptedInput(salaryCompareAddress, signer.address)
+        .add32(parseInt(salary))
+        .encrypt();
+
+      const tx = await salaryCompare.submitSalary(
+        encryptedSalary.handles[0],
+        encryptedSalary.inputProof
+      );
+
+      console.log(`⏳ Waiting for transaction confirmation...`);
+      const receipt = await tx.wait();
+
+      console.log(`✅ Salary submitted successfully!`);
+      console.log(`📊 Transaction hash: ${tx.hash}`);
+      console.log(`⛽ Gas used: ${receipt.gasUsed.toString()}`);
+    } catch (error) {
+      console.error(`❌ Error submitting salary:`, error);
+      throw error;
+    }
   });
 
 task("task:compareSalaries")

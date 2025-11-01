@@ -19,7 +19,10 @@ contract SalaryCompare is SepoliaConfig {
     
     // Mapping to track if a comparison has been performed
     mapping(address => mapping(address => bool)) private comparisonPerformed;
-    
+
+    // Counter for total users with salaries
+    uint256 public totalUsersWithSalary;
+
     // Events
     event SalarySubmitted(address indexed user);
     event SalaryCompared(address indexed user1, address indexed user2);
@@ -30,14 +33,19 @@ contract SalaryCompare is SepoliaConfig {
     /// @param inputProof the input proof
     function submitSalary(externalEuint32 inputEuint32, bytes calldata inputProof) external {
         euint32 encryptedSalary = FHE.fromExternal(inputEuint32, inputProof);
-        
+
+        // Increment counter for new users only
+        if (!hasSalary[msg.sender]) {
+            totalUsersWithSalary++;
+        }
+
         salaries[msg.sender] = encryptedSalary;
         hasSalary[msg.sender] = true;
-        
+
         // Allow the contract and the user to access this encrypted value
         FHE.allowThis(encryptedSalary);
         FHE.allow(encryptedSalary, msg.sender);
-        
+
         emit SalarySubmitted(msg.sender);
     }
     
@@ -142,6 +150,19 @@ contract SalaryCompare is SepoliaConfig {
 
             emit SalaryCompared(msg.sender, otherUser);
         }
+    }
+
+    /// @notice Get platform statistics
+    /// @return Total number of users who have submitted salaries
+    function getTotalUsers() external view returns (uint256) {
+        return totalUsersWithSalary;
+    }
+
+    /// @notice Check if user has submitted salary (public getter)
+    /// @param user The user address to check
+    /// @return True if the user has submitted a salary
+    function userHasSalary(address user) external view returns (bool) {
+        return hasSalary[user];
     }
 }
 

@@ -356,5 +356,70 @@ describe("SalaryCompare", function () {
       .to.emit(salaryCompareContract, "SalaryUpdated")
       .withArgs(signers.alice.address);
   });
+
+  it("should track total users correctly", async function () {
+    // Initially no users
+    expect(await salaryCompareContract.getTotalUsers()).to.equal(0);
+
+    // Alice submits salary - total should be 1
+    const aliceSalary = 60000;
+    const encryptedAliceSalary = await fhevm
+      .createEncryptedInput(salaryCompareContractAddress, signers.alice.address)
+      .add32(aliceSalary)
+      .encrypt();
+
+    await salaryCompareContract
+      .connect(signers.alice)
+      .submitSalary(encryptedAliceSalary.handles[0], encryptedAliceSalary.inputProof);
+
+    expect(await salaryCompareContract.getTotalUsers()).to.equal(1);
+
+    // Bob submits salary - total should be 2
+    const bobSalary = 70000;
+    const encryptedBobSalary = await fhevm
+      .createEncryptedInput(salaryCompareContractAddress, signers.bob.address)
+      .add32(bobSalary)
+      .encrypt();
+
+    await salaryCompareContract
+      .connect(signers.bob)
+      .submitSalary(encryptedBobSalary.handles[0], encryptedBobSalary.inputProof);
+
+    expect(await salaryCompareContract.getTotalUsers()).to.equal(2);
+
+    // Alice updates salary - total should remain 2
+    const aliceUpdatedSalary = 65000;
+    const encryptedAliceUpdatedSalary = await fhevm
+      .createEncryptedInput(salaryCompareContractAddress, signers.alice.address)
+      .add32(aliceUpdatedSalary)
+      .encrypt();
+
+    await salaryCompareContract
+      .connect(signers.alice)
+      .updateSalary(encryptedAliceUpdatedSalary.handles[0], encryptedAliceUpdatedSalary.inputProof);
+
+    expect(await salaryCompareContract.getTotalUsers()).to.equal(2);
+  });
+
+  it("should provide public userHasSalary getter", async function () {
+    // Initially no users have salaries
+    expect(await salaryCompareContract.userHasSalary(signers.alice.address)).to.be.false;
+    expect(await salaryCompareContract.userHasSalary(signers.bob.address)).to.be.false;
+
+    // Alice submits salary
+    const aliceSalary = 55000;
+    const encryptedAliceSalary = await fhevm
+      .createEncryptedInput(salaryCompareContractAddress, signers.alice.address)
+      .add32(aliceSalary)
+      .encrypt();
+
+    await salaryCompareContract
+      .connect(signers.alice)
+      .submitSalary(encryptedAliceSalary.handles[0], encryptedAliceSalary.inputProof);
+
+    // Alice should have salary, Bob should not
+    expect(await salaryCompareContract.userHasSalary(signers.alice.address)).to.be.true;
+    expect(await salaryCompareContract.userHasSalary(signers.bob.address)).to.be.false;
+  });
 });
 

@@ -208,6 +208,12 @@ For issues and questions, please open an issue on the GitHub repository.
 ### Contract Verification
 The smart contract has been deployed and verified on Sepolia testnet. All salary comparison operations are performed using Fully Homomorphic Encryption, ensuring that salary data remains private throughout the comparison process.
 
+### Deployment Details
+- **Network**: Ethereum Sepolia Testnet
+- **FHEVM Version**: Compatible with Zama FHEVM
+- **Verification**: Contract source code verified on Etherscan
+- **Security**: All sensitive operations use FHE for privacy preservation
+
 ## 🔗 Links
 
 - [Zama FHEVM Documentation](https://docs.zama.ai/fhevm)

@@ -93,11 +93,16 @@ const config: HardhatUserConfig = {
         // https://github.com/paulrberg/hardhat-template/issues/31
         bytecodeHash: "none",
       },
-      // Disable the optimizer when debugging
-      // https://hardhat.org/hardhat-network/#solidity-optimizer-support
+      // Optimized for FHEVM contracts
       optimizer: {
         enabled: true,
-        runs: 1000,
+        runs: 200, // Lower runs for FHEVM contracts to optimize gas costs
+        details: {
+          yul: true,
+          yulDetails: {
+            stackAllocation: true,
+          },
+        },
       },
       viaIR: true,
       evmVersion: "cancun",
@@ -106,6 +111,18 @@ const config: HardhatUserConfig = {
   typechain: {
     outDir: "types",
     target: "ethers-v6",
+  },
+  docgen: {
+    pages: "files",
+    outputDir: "./docs",
+    templates: "./node_modules/@fhevm-hardhat-template/docgen-templates",
+    exclude: ["./test", "./scripts", "./tasks"],
+  },
+  fhevm: {
+    // Enable FHEVM compiler optimizations
+    compiler: {
+      optimizations: true,
+    },
   },
 };
 

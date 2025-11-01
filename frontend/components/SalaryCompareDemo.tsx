@@ -174,8 +174,8 @@ export const SalaryCompareDemo = () => {
               />
             </div>
             <button
-              className={buttonClass}
-              disabled={!salaryCompare.canSubmit || !salaryInput || parseInt(salaryInput) <= 0}
+              className={`${buttonClass} ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
+              disabled={!salaryCompare.canSubmit || !salaryInput || parseInt(salaryInput) <= 0 || isSubmitting}
               onClick={async () => {
                 const salary = parseInt(salaryInput);
                 if (salary > 0) {
@@ -189,11 +189,16 @@ export const SalaryCompareDemo = () => {
                 }
               }}
             >
-              {salaryCompare.isSubmitting
-                ? "Submitting..."
-                : salaryCompare.hasSalary
-                ? "Update Salary"
-                : "Submit Salary"}
+              {isSubmitting ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Submitting...
+                </div>
+              ) : salaryCompare.hasSalary ? (
+                "Update Salary"
+              ) : (
+                "Submit Salary"
+              )}
             </button>
             {salaryCompare.hasSalary && (
               <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
@@ -246,8 +251,8 @@ export const SalaryCompareDemo = () => {
               </div>
             )}
             <button
-              className={buttonClass}
-              disabled={!salaryCompare.canCompare || !compareAddress}
+              className={`${buttonClass} ${isComparing ? 'opacity-75 cursor-not-allowed' : ''}`}
+              disabled={!salaryCompare.canCompare || !compareAddress || isComparing}
               onClick={async () => {
                 if (compareAddress) {
                   setIsComparing(true);
@@ -259,9 +264,14 @@ export const SalaryCompareDemo = () => {
                 }
               }}
             >
-              {salaryCompare.isComparing
-                ? "Comparing..."
-                : "Compare Salaries"}
+              {isComparing ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Comparing...
+                </div>
+              ) : (
+                "Compare Salaries"
+              )}
             </button>
             {salaryCompare.comparisonResult && (
               <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">

@@ -85,6 +85,7 @@ export const useSalaryCompare = (parameters: {
   const [isDecryptingComparison, setIsDecryptingComparison] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [comparisonAddress, setComparisonAddress] = useState<string>("");
+  const [retryCount, setRetryCount] = useState<number>(0);
 
   // Refs
   const salaryCompareRef = useRef<SalaryCompareInfoType | undefined>(undefined);
@@ -342,8 +343,17 @@ export const useSalaryCompare = (parameters: {
         };
 
         setMessage(`Your salary: $${res[thisSalaryHandle].toString()}`);
+        setRetryCount(0); // Reset retry count on success
       } catch (e) {
-        setMessage(`Decryption failed: ${(e as Error).message}`);
+        const error = e as Error;
+        if (retryCount < 2) {
+          setRetryCount(prev => prev + 1);
+          setMessage(`Decryption failed, retrying... (${retryCount + 1}/3)`);
+          setTimeout(() => run(), 1000); // Retry after 1 second
+          return;
+        }
+        setMessage(`Decryption failed after ${retryCount + 1} attempts: ${error.message}`);
+        setRetryCount(0);
       } finally {
         isDecryptingSalaryRef.current = false;
         setIsDecryptingSalary(false);
@@ -356,7 +366,6 @@ export const useSalaryCompare = (parameters: {
     ethersSigner,
     salaryCompare.address,
     instance,
-    mySalary,
     chainId,
     sameChain,
     sameSigner,
@@ -523,7 +532,6 @@ export const useSalaryCompare = (parameters: {
     ethersSigner,
     salaryCompare.address,
     instance,
-    comparisonResult,
     chainId,
     sameChain,
     sameSigner,

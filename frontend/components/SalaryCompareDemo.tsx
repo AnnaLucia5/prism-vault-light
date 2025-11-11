@@ -177,8 +177,13 @@ export const SalaryCompareDemo = () => {
               onClick={async () => {
                 const salary = parseInt(salaryInput);
                 if (salary > 0) {
-                  await salaryCompare.submitSalary(salary);
-                  setSalaryInput("");
+                  try {
+                    await salaryCompare.submitSalary(salary);
+                    setSalaryInput("");
+                  } catch (error) {
+                    console.error("Failed to submit salary:", error);
+                    // Error will be handled by the hook's error state
+                  }
                 }
               }}
             >

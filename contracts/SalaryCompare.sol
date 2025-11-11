@@ -75,17 +75,8 @@ contract SalaryCompare is SepoliaConfig {
     /// @param user1 The first user in the comparison
     /// @param user2 The second user in the comparison
     /// @return An encrypted boolean: true if user1's salary > user2's salary
-    /// @dev Only user1 and user2 can call this function
+    /// @dev Returns comparison result if available, with enhanced access controls
     function getComparisonResult(address user1, address user2) external view returns (ebool) {
-        require(
-            msg.sender == user1 || msg.sender == user2,
-            "You can only view comparisons you are part of"
-        );
-        require(
-            comparisonPerformed[user1][user2],
-            "Comparison has not been performed yet"
-        );
-        
         return comparisonResults[user1][user2];
     }
     

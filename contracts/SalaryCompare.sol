@@ -101,6 +101,7 @@ contract SalaryCompare is SepoliaConfig {
     /// @param inputEuint32 the new encrypted salary value
     /// @param inputProof the input proof
     function updateSalary(externalEuint32 inputEuint32, bytes calldata inputProof) external {
+        require(hasSalary[msg.sender], "You must submit a salary first before updating it");
         euint32 encryptedSalary = FHE.fromExternal(inputEuint32, inputProof);
 
         salaries[msg.sender] = encryptedSalary;

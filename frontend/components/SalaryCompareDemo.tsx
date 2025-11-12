@@ -1,5 +1,6 @@
 "use client";
 
+import { ethers } from "ethers";
 import { useFhevm } from "../fhevm/useFhevm";
 import { useInMemoryStorage } from "../hooks/useInMemoryStorage";
 import { useMetaMaskEthersSigner } from "../hooks/metamask/useMetaMaskEthersSigner";
@@ -239,11 +240,36 @@ export const SalaryCompareDemo = () => {
                 </p>
               </div>
             )}
-            {compareAddress && compareAddress.length > 0 && !compareAddress.startsWith("0x") && (
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  💡 Ethereum addresses should start with "0x"
-                </p>
+            {compareAddress && compareAddress.length > 0 && (
+              <div className="space-y-2">
+                {!compareAddress.startsWith("0x") && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      💡 <strong>Tip:</strong> Ethereum addresses should start with "0x"
+                    </p>
+                  </div>
+                )}
+                {compareAddress.startsWith("0x") && compareAddress.length > 0 && compareAddress.length < 42 && (
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <p className="text-sm text-yellow-800">
+                      ⚠️ <strong>Incomplete:</strong> Ethereum addresses must be exactly 42 characters long (currently {compareAddress.length})
+                    </p>
+                  </div>
+                )}
+                {compareAddress.length === 42 && !ethers.isAddress(compareAddress) && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-800">
+                      ❌ <strong>Invalid Format:</strong> This doesn't appear to be a valid Ethereum address. Please check for typos.
+                    </p>
+                  </div>
+                )}
+                {compareAddress.length === 42 && ethers.isAddress(compareAddress) && accounts?.[0] && compareAddress.toLowerCase() === accounts[0].toLowerCase() && (
+                  <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                    <p className="text-sm text-orange-800">
+                      🚫 <strong>Cannot Compare:</strong> You cannot compare your salary with yourself.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
             <button

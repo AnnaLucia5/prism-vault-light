@@ -169,15 +169,11 @@ export const useSalaryCompare = (parameters: {
 
       const value: string = await contract.getMySalary();
       setMySalary(value);
-    } catch (e) {
-      const err = e as Error;
-      if (err.message?.includes("You have not submitted a salary yet")) {
-        setMessage("You have not submitted a salary yet. Please submit your encrypted salary first.");
-        setMySalary(undefined);
-        return;
+
+      // Auto-decrypt if possible
+      if (value && value !== ethers.ZeroHash) {
+        setMessage("Salary retrieved successfully. You can now decrypt it.");
       }
-      setMessage("Unable to retrieve your salary. Please try again after submitting.");
-    }
   }, [salaryCompare.address, salaryCompare.abi, ethersReadonlyProvider, ethersSigner]);
 
   // Submit salary

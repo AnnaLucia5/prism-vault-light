@@ -378,6 +378,35 @@ export const useSalaryCompare = (parameters: {
         return;
       }
 
+      // Multi-layer address validation
+      if (!otherAddress || typeof otherAddress !== 'string') {
+        setMessage("Address is required and must be a valid string");
+        return;
+      }
+
+      // Check if address starts with 0x
+      if (!otherAddress.startsWith('0x')) {
+        setMessage("Ethereum address must start with '0x'");
+        return;
+      }
+
+      // Check address length (42 characters for Ethereum addresses)
+      if (otherAddress.length !== 42) {
+        setMessage("Ethereum address must be exactly 42 characters long");
+        return;
+      }
+
+      // Use ethers library for comprehensive validation
+      if (!ethers.isAddress(otherAddress)) {
+        setMessage("Invalid Ethereum address format. Please check and try again.");
+        return;
+      }
+
+      // Prevent self-comparison
+      if (otherAddress.toLowerCase() === ethersSigner.address.toLowerCase()) {
+        setMessage("You cannot compare your salary with yourself");
+        return;
+      }
 
       const thisChainId = chainId;
       const thisContractAddress = salaryCompare.address;

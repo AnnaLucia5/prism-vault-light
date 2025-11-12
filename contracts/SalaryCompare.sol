@@ -118,6 +118,8 @@ contract SalaryCompare is SepoliaConfig {
     /// @dev Performs comparison with each user in the array
     function batchCompareSalaries(address[] calldata otherUsers) external {
         require(hasSalary[msg.sender], "You have not submitted a salary yet");
+        require(otherUsers.length > 0, "Must provide at least one user to compare with");
+        require(otherUsers.length <= 10, "Cannot compare with more than 10 users at once");
 
         for (uint256 i = 0; i < otherUsers.length; i++) {
             address otherUser = otherUsers[i];

@@ -172,7 +172,7 @@ export const SalaryCompareDemo = () => {
               />
             </div>
             <button
-              className={buttonClass}
+              className={`${buttonClass} ${salaryCompare.isSubmitting ? 'animate-pulse' : ''}`}
               disabled={!salaryCompare.canSubmit || !salaryInput || parseInt(salaryInput) <= 0}
               onClick={async () => {
                 const salary = parseInt(salaryInput);
@@ -187,11 +187,16 @@ export const SalaryCompareDemo = () => {
                 }
               }}
             >
-              {salaryCompare.isSubmitting
-                ? "Submitting..."
-                : salaryCompare.hasSalary
-                ? "Update Salary"
-                : "Submit Salary"}
+              {salaryCompare.isSubmitting ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Submitting...
+                </div>
+              ) : salaryCompare.hasSalary ? (
+                "Update Salary"
+              ) : (
+                "Submit Salary"
+              )}
             </button>
             {salaryCompare.hasSalary && (
               <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">

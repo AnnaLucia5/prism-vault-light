@@ -77,6 +77,18 @@ contract SalaryCompare is SepoliaConfig {
     /// @return An encrypted boolean: true if user1's salary > user2's salary
     /// @dev Returns comparison result if available, with enhanced access controls
     function getComparisonResult(address user1, address user2) external view returns (ebool) {
+        // Access control: only participants can view comparison results
+        require(
+            msg.sender == user1 || msg.sender == user2,
+            "Access denied: You can only view comparisons you are part of"
+        );
+
+        // Ensure comparison has been performed
+        require(
+            comparisonPerformed[user1][user2],
+            "Comparison not found: This comparison has not been performed yet"
+        );
+
         return comparisonResults[user1][user2];
     }
     

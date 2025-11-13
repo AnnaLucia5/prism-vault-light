@@ -24,6 +24,7 @@ contract SalaryCompare is SepoliaConfig {
     event SalarySubmitted(address indexed user);
     event SalaryCompared(address indexed user1, address indexed user2);
     event SalaryUpdated(address indexed user);
+    event ComparisonAccessed(address indexed accessor, address indexed user1, address indexed user2, bool success);
     
     /// @notice Submit an encrypted salary
     /// @param inputEuint32 the encrypted salary value
@@ -76,7 +77,7 @@ contract SalaryCompare is SepoliaConfig {
     /// @param user2 The second user in the comparison
     /// @return An encrypted boolean: true if user1's salary > user2's salary
     /// @dev Returns comparison result if available, with enhanced access controls
-    function getComparisonResult(address user1, address user2) external view returns (ebool) {
+    function getComparisonResult(address user1, address user2) external returns (ebool) {
         // Input validation: ensure valid addresses
         require(user1 != address(0), "Invalid user1 address: cannot be zero address");
         require(user2 != address(0), "Invalid user2 address: cannot be zero address");
@@ -87,16 +88,17 @@ contract SalaryCompare is SepoliaConfig {
         require(hasSalary[user2], "User2 has not submitted their salary yet");
 
         // Access control: only participants can view comparison results
-        require(
-            msg.sender == user1 || msg.sender == user2,
-            "Access denied: You can only view comparisons you are part of"
-        );
+        bool hasAccess = (msg.sender == user1 || msg.sender == user2);
+        require(hasAccess, "Access denied: You can only view comparisons you are part of");
 
         // Ensure comparison has been performed
         require(
             comparisonPerformed[user1][user2],
             "Comparison not found: This comparison has not been performed yet"
         );
+
+        // Log successful access
+        emit ComparisonAccessed(msg.sender, user1, user2, true);
 
         return comparisonResults[user1][user2];
     }

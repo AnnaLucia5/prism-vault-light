@@ -77,6 +77,15 @@ contract SalaryCompare is SepoliaConfig {
     /// @return An encrypted boolean: true if user1's salary > user2's salary
     /// @dev Returns comparison result if available, with enhanced access controls
     function getComparisonResult(address user1, address user2) external view returns (ebool) {
+        // Input validation: ensure valid addresses
+        require(user1 != address(0), "Invalid user1 address: cannot be zero address");
+        require(user2 != address(0), "Invalid user2 address: cannot be zero address");
+        require(user1 != user2, "Invalid comparison: cannot compare user with themselves");
+
+        // Boundary check: ensure both users have submitted salaries
+        require(hasSalary[user1], "User1 has not submitted their salary yet");
+        require(hasSalary[user2], "User2 has not submitted their salary yet");
+
         // Access control: only participants can view comparison results
         require(
             msg.sender == user1 || msg.sender == user2,

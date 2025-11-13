@@ -21,9 +21,9 @@ contract SalaryCompare is SepoliaConfig {
     mapping(address => mapping(address => bool)) private comparisonPerformed;
     
     // Events
-    event SalarySubmitted(address indexed user);
-    event SalaryCompared(address indexed user1, address indexed user2);
-    event SalaryUpdated(address indexed user);
+    event SalarySubmitted(address indexed user, uint256 timestamp);
+    event SalaryCompared(address indexed user1, address indexed user2, uint256 timestamp);
+    event SalaryUpdated(address indexed user, uint256 timestamp);
     
     /// @notice Submit an encrypted salary
     /// @param inputEuint32 the encrypted salary value
@@ -38,7 +38,7 @@ contract SalaryCompare is SepoliaConfig {
         FHE.allowThis(encryptedSalary);
         FHE.allow(encryptedSalary, msg.sender);
         
-        emit SalarySubmitted(msg.sender);
+        emit SalarySubmitted(msg.sender, block.timestamp);
     }
     
     /// @notice Get your own encrypted salary
@@ -68,7 +68,7 @@ contract SalaryCompare is SepoliaConfig {
         FHE.allow(isGreater, msg.sender);
         FHE.allow(isGreater, otherUser);
         
-        emit SalaryCompared(msg.sender, otherUser);
+        emit SalaryCompared(msg.sender, otherUser, block.timestamp);
     }
     
     /// @notice Get the encrypted comparison result
@@ -110,7 +110,7 @@ contract SalaryCompare is SepoliaConfig {
         FHE.allowThis(encryptedSalary);
         FHE.allow(encryptedSalary, msg.sender);
 
-        emit SalaryUpdated(msg.sender);
+        emit SalaryUpdated(msg.sender, block.timestamp);
     }
 
     /// @notice Batch compare salaries with multiple users
@@ -143,7 +143,7 @@ contract SalaryCompare is SepoliaConfig {
             FHE.allow(isGreater, msg.sender);
             FHE.allow(isGreater, otherUser);
 
-            emit SalaryCompared(msg.sender, otherUser);
+            emit SalaryCompared(msg.sender, otherUser, block.timestamp);
         }
     }
 }

@@ -174,6 +174,11 @@ export const useSalaryCompare = (parameters: {
       if (value && value !== ethers.ZeroHash) {
         setMessage("Salary retrieved successfully. You can now decrypt it.");
       }
+    } catch (error) {
+      console.error("Error refreshing salary:", error);
+      setMessage("Failed to retrieve salary. Please check your connection and try again.");
+      setMySalary(undefined);
+    }
   }, [salaryCompare.address, salaryCompare.abi, ethersReadonlyProvider, ethersSigner]);
 
   // Submit salary

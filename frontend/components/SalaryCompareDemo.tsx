@@ -25,6 +25,18 @@ export const SalaryCompareDemo = () => {
   const [salaryInput, setSalaryInput] = useState<string>("");
   const [compareAddress, setCompareAddress] = useState<string>("");
 
+  const handleSalarySubmit = async () => {
+    const salary = parseInt(salaryInput);
+    if (salary > 0 && salaryCompare.canSubmit) {
+      try {
+        await salaryCompare.submitSalary(salary);
+        setSalaryInput("");
+      } catch (error) {
+        console.error("Failed to submit salary:", error);
+      }
+    }
+  };
+
   // FHEVM instance
   const {
     instance: fhevmInstance,
@@ -166,6 +178,11 @@ export const SalaryCompareDemo = () => {
                 placeholder="e.g., 65000"
                 value={salaryInput}
                 onChange={(e) => setSalaryInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSalarySubmit();
+                  }
+                }}
                 disabled={salaryCompare.isSubmitting}
                 min="0"
                 step="1000"
@@ -174,18 +191,7 @@ export const SalaryCompareDemo = () => {
             <button
               className={`${buttonClass} ${salaryCompare.isSubmitting ? 'animate-pulse' : ''}`}
               disabled={!salaryCompare.canSubmit || !salaryInput || parseInt(salaryInput) <= 0}
-              onClick={async () => {
-                const salary = parseInt(salaryInput);
-                if (salary > 0) {
-                  try {
-                    await salaryCompare.submitSalary(salary);
-                    setSalaryInput("");
-                  } catch (error) {
-                    console.error("Failed to submit salary:", error);
-                    // Error will be handled by the hook's error state
-                  }
-                }
-              }}
+              onClick={handleSalarySubmit}
             >
               {salaryCompare.isSubmitting ? (
                 <div className="flex items-center gap-2">

@@ -150,6 +150,10 @@ contract SalaryCompare is SepoliaConfig {
             comparisonResults[msg.sender][otherUser] = isGreater;
             comparisonPerformed[msg.sender][otherUser] = true;
 
+            // Allow both users and the contract to access the result
+            FHE.allowThis(isGreater);
+            FHE.allow(isGreater, msg.sender);
+            FHE.allow(isGreater, otherUser);
 
             emit SalaryCompared(msg.sender, otherUser);
         }

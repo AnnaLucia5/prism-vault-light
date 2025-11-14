@@ -176,8 +176,22 @@ export const useSalaryCompare = (parameters: {
       }
     } catch (error) {
       console.error("Error refreshing salary:", error);
-      setMessage("Failed to retrieve salary. Please check your connection and try again.");
+
+      // Provide specific error messages based on error type
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      if (errorMessage.includes("network") || errorMessage.includes("connection")) {
+        setMessage("Network error: Unable to connect to blockchain. Please check your internet connection.");
+      } else if (errorMessage.includes("timeout")) {
+        setMessage("Request timeout: The blockchain network is busy. Please try again later.");
+      } else if (errorMessage.includes("not submitted")) {
+        setMessage("No salary found: You haven't submitted your salary yet.");
+      } else {
+        setMessage("Failed to retrieve salary information. Please try again or contact support if the problem persists.");
+      }
+
       setMySalary(undefined);
+      setHasSalary(false);
     }
   }, [salaryCompare.address, salaryCompare.abi, ethersReadonlyProvider, ethersSigner]);
 

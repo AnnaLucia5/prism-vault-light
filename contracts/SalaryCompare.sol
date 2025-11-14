@@ -52,10 +52,13 @@ contract SalaryCompare is SepoliaConfig {
     /// @param otherUser The address of the user to compare with
     /// @dev Stores an encrypted boolean: true if msg.sender's salary > otherUser's salary
     function compareSalaries(address otherUser) external {
+        // Prevent comparing with self
+        require(msg.sender != otherUser, "Cannot compare salary with yourself");
         require(hasSalary[msg.sender], "You have not submitted a salary yet");
         require(hasSalary[otherUser], "The other user has not submitted a salary yet");
         require(msg.sender != otherUser, "Cannot compare with yourself");
-        
+        require(!comparisonPerformed[msg.sender][otherUser], "Comparison already performed between these users");
+
         // Compare: is msg.sender's salary greater than otherUser's salary?
         ebool isGreater = FHE.gt(salaries[msg.sender], salaries[otherUser]);
         

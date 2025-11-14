@@ -146,6 +146,9 @@ contract SalaryCompare is SepoliaConfig {
             // Compare: is msg.sender's salary greater than otherUser's salary?
             ebool isGreater = FHE.gt(salaries[msg.sender], salaries[otherUser]);
 
+            // Verify comparison result is valid before storing
+            require(FHE.isInitialized(isGreater), "FHE comparison result initialization failed");
+
             // Store the result
             comparisonResults[msg.sender][otherUser] = isGreater;
             comparisonPerformed[msg.sender][otherUser] = true;

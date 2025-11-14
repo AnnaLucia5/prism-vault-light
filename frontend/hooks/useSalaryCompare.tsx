@@ -86,6 +86,7 @@ export const useSalaryCompare = (parameters: {
   const [message, setMessage] = useState<string>("");
   const [comparisonAddress, setComparisonAddress] = useState<string>("");
   const [retryCount, setRetryCount] = useState<number>(0);
+  const [refreshRetryCount, setRefreshRetryCount] = useState<number>(0);
 
   // Refs
   const salaryCompareRef = useRef<SalaryCompareInfoType | undefined>(undefined);
@@ -180,8 +181,29 @@ export const useSalaryCompare = (parameters: {
       // Provide specific error messages based on error type
       const errorMessage = error instanceof Error ? error.message : String(error);
 
+      if ((errorMessage.includes("network") || errorMessage.includes("connection")) && refreshRetryCount < 2) {
+        // Retry network errors up to 2 times
+        setRefreshRetryCount(prev => prev + 1);
+        setMessage(`Network error: Retrying connection (${refreshRetryCount + 1}/3)...`);
+
+        setTimeout(() => {
+          refreshMySalary();
+        }, 2000); // Wait 2 seconds before retry
+        return;
+      } else if (errorMessage.includes("timeout") && refreshRetryCount < 1) {
+        // Retry timeout errors once
+        setRefreshRetryCount(prev => prev + 1);
+        setMessage(`Request timeout: Retrying (${refreshRetryCount + 1}/2)...`);
+
+        setTimeout(() => {
+          refreshMySalary();
+        }, 3000); // Wait 3 seconds before retry
+        return;
+      }
+
+      // Final error messages
       if (errorMessage.includes("network") || errorMessage.includes("connection")) {
-        setMessage("Network error: Unable to connect to blockchain. Please check your internet connection.");
+        setMessage("Network error: Unable to connect to blockchain after retries. Please check your internet connection.");
       } else if (errorMessage.includes("timeout")) {
         setMessage("Request timeout: The blockchain network is busy. Please try again later.");
       } else if (errorMessage.includes("not submitted")) {
@@ -192,6 +214,7 @@ export const useSalaryCompare = (parameters: {
 
       setMySalary(undefined);
       setHasSalary(false);
+      setRefreshRetryCount(0); // Reset retry count on final failure
     }
   }, [salaryCompare.address, salaryCompare.abi, ethersReadonlyProvider, ethersSigner]);
 

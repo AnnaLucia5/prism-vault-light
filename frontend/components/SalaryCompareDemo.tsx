@@ -174,7 +174,13 @@ export const SalaryCompareDemo = () => {
               </label>
               <input
                 type="number"
-                className={inputClass}
+                className={`${inputClass} ${
+                  salaryInput && (parseInt(salaryInput) <= 0 || isNaN(parseInt(salaryInput)))
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                    : salaryInput && parseInt(salaryInput) > 0
+                    ? 'border-green-500 focus:border-green-500 focus:ring-green-200'
+                    : ''
+                }`}
                 placeholder="e.g., 65000"
                 value={salaryInput}
                 onChange={(e) => setSalaryInput(e.target.value)}
@@ -187,6 +193,12 @@ export const SalaryCompareDemo = () => {
                 min="0"
                 step="1000"
               />
+              {salaryInput && parseInt(salaryInput) <= 0 && (
+                <p className="text-sm text-red-600 mt-1">Please enter a valid salary amount greater than 0</p>
+              )}
+              {salaryInput && parseInt(salaryInput) > 1000000 && (
+                <p className="text-sm text-amber-600 mt-1">High salary detected - ensure accuracy</p>
+              )}
             </div>
             <button
               className={`${buttonClass} ${salaryCompare.isSubmitting ? 'animate-pulse' : ''}`}

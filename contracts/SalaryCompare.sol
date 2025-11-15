@@ -7,6 +7,8 @@ import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
 /// @title Encrypted Salary Comparison Contract
 /// @author Encrypted Salary Compare MVP
 /// @notice Allows users to submit encrypted salaries and compare them privately without revealing actual values
+/// @dev Uses Fully Homomorphic Encryption (FHE) to enable computations on encrypted data
+/// @dev All salary comparisons are performed on-chain without decrypting sensitive information
 contract SalaryCompare is SepoliaConfig {
     // Mapping from user address to their encrypted salary
     mapping(address => euint32) private salaries;
@@ -28,6 +30,7 @@ contract SalaryCompare is SepoliaConfig {
     /// @notice Submit an encrypted salary
     /// @param inputEuint32 the encrypted salary value
     /// @param inputProof the input proof
+    /// @dev Salary is encrypted client-side before submission
     function submitSalary(externalEuint32 inputEuint32, bytes calldata inputProof) external {
         euint32 encryptedSalary = FHE.fromExternal(inputEuint32, inputProof);
         

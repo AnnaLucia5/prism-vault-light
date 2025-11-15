@@ -113,7 +113,7 @@ export const SalaryCompareDemo = () => {
       </div>
 
       {/* Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Account Info */}
         <div className={cardClass}>
           <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
@@ -160,7 +160,7 @@ export const SalaryCompareDemo = () => {
       </div>
 
       {/* Main Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
         {/* Submit Salary Card */}
         <div className={cardClass}>
           <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">

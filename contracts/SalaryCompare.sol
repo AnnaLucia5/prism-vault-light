@@ -130,13 +130,25 @@ contract SalaryCompare is SepoliaConfig {
     /// @param otherUsers Array of user addresses to compare with
     /// @dev Performs comparison with each user in the array, max 10 users per batch
     function batchCompareSalaries(address[] calldata otherUsers) external {
-        require(hasSalary[msg.sender], "You have not submitted a salary yet");
+        // Input validation
+        require(otherUsers.length > 0, "Must provide at least one user to compare with");
         require(otherUsers.length <= 10, "Cannot compare with more than 10 users at once");
+        require(hasSalary[msg.sender], "You have not submitted a salary yet");
+
+        // Check for duplicate addresses in the input array
+        for (uint256 i = 0; i < otherUsers.length; i++) {
+            require(otherUsers[i] != address(0), "Invalid address: cannot be zero address");
+            require(otherUsers[i] != msg.sender, "Cannot compare with yourself");
+
+            // Check for duplicates within the array
+            for (uint256 j = i + 1; j < otherUsers.length; j++) {
+                require(otherUsers[i] != otherUsers[j], "Duplicate addresses not allowed");
+            }
+        }
 
         for (uint256 i = 0; i < otherUsers.length; i++) {
             address otherUser = otherUsers[i];
             require(hasSalary[otherUser], "One of the other users has not submitted a salary yet");
-            require(msg.sender != otherUser, "Cannot compare with yourself");
 
             // Skip if comparison already performed
             if (comparisonPerformed[msg.sender][otherUser]) {

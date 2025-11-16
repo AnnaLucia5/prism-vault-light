@@ -68,10 +68,11 @@ export const SalaryCompareDemo = () => {
     "disabled:opacity-50 disabled:pointer-events-none disabled:transform-none";
 
   const inputClass =
-    "w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 " +
-    "transition-all duration-200 outline-none text-gray-800 placeholder-gray-400";
+    "w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 " +
+    "focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-all duration-200 outline-none " +
+    "text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700";
 
-  const cardClass = "bg-white rounded-xl shadow-lg p-6 border-2 border-gray-100";
+  const cardClass = "bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-2 border-gray-100 dark:border-gray-700";
 
   if (!isConnected) {
     return (

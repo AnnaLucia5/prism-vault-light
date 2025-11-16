@@ -10,6 +10,8 @@ import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
 /// @dev Uses Fully Homomorphic Encryption (FHE) to enable computations on encrypted data
 /// @dev All salary comparisons are performed on-chain without decrypting sensitive information
 contract SalaryCompare is SepoliaConfig {
+    // Constants for gas optimization
+    uint256 private constant MAX_BATCH_SIZE = 10;
     // Mapping from user address to their encrypted salary
     mapping(address => euint32) private salaries;
     
@@ -125,7 +127,7 @@ contract SalaryCompare is SepoliaConfig {
     function batchCompareSalaries(address[] calldata otherUsers) external {
         require(hasSalary[msg.sender], "You have not submitted a salary yet");
         require(otherUsers.length > 0, "Must provide at least one user to compare with");
-        require(otherUsers.length <= 10, "Cannot compare with more than 10 users at once");
+        require(otherUsers.length <= MAX_BATCH_SIZE, "Cannot compare with more than 10 users at once");
 
         for (uint256 i = 0; i < otherUsers.length; i++) {
             address otherUser = otherUsers[i];

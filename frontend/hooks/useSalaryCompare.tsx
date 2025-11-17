@@ -600,6 +600,7 @@ export const useSalaryCompare = (parameters: {
     ethersSigner,
     salaryCompare.address,
     instance,
+    comparisonResult,
     chainId,
     sameChain,
     sameSigner,

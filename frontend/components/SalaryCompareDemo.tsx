@@ -193,9 +193,11 @@ export const SalaryCompareDemo = () => {
                 disabled={salaryCompare.isSubmitting}
                 min="0"
                 step="1000"
+                aria-label="Salary amount in USD"
+                aria-describedby={salaryInput && parseInt(salaryInput) <= 0 ? "salary-error" : undefined}
               />
               {salaryInput && parseInt(salaryInput) <= 0 && (
-                <p className="text-sm text-red-600 mt-1">Please enter a valid salary amount greater than 0</p>
+                <p id="salary-error" className="text-sm text-red-600 mt-1" role="alert">Please enter a valid salary amount greater than 0</p>
               )}
               {salaryInput && parseInt(salaryInput) > 1000000 && (
                 <p className="text-sm text-amber-600 mt-1">High salary detected - ensure accuracy</p>

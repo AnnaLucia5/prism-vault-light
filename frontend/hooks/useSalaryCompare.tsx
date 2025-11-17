@@ -315,7 +315,15 @@ export const useSalaryCompare = (parameters: {
       return;
     }
 
+    // Check for already decrypted or stale data
     if (mySalary === clearMySalaryRef.current?.handle) {
+      setMessage("Salary already decrypted.");
+      return;
+    }
+
+    // Additional state synchronization check
+    if (clearMySalary && clearMySalary.handle === mySalary) {
+      setMessage("Salary decryption already completed.");
       return;
     }
 
@@ -523,7 +531,15 @@ export const useSalaryCompare = (parameters: {
       return;
     }
 
+    // Check for already decrypted or stale data
     if (comparisonResult === clearComparisonResultRef.current?.handle) {
+      setMessage("Comparison result already decrypted.");
+      return;
+    }
+
+    // Additional state synchronization check
+    if (clearComparisonResult && clearComparisonResult.handle === comparisonResult) {
+      setMessage("Comparison result decryption already completed.");
       return;
     }
 

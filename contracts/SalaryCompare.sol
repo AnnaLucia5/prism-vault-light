@@ -16,9 +16,12 @@ contract SalaryCompare is SepoliaConfig {
     
     // Mapping from (user1, user2) to their comparison result
     mapping(address => mapping(address => ebool)) private comparisonResults;
-    
+
     // Mapping to track if a comparison has been performed
     mapping(address => mapping(address => bool)) private comparisonPerformed;
+
+    // Reentrancy guard
+    bool private locked;
     
     // Events
     event SalarySubmitted(address indexed user);
@@ -29,7 +32,7 @@ contract SalaryCompare is SepoliaConfig {
     /// @notice Submit an encrypted salary
     /// @param inputEuint32 the encrypted salary value
     /// @param inputProof the input proof
-    function submitSalary(externalEuint32 inputEuint32, bytes calldata inputProof) external {
+    function submitSalary(externalEuint32 inputEuint32, bytes calldata inputProof) external nonReentrant {
         euint32 encryptedSalary = FHE.fromExternal(inputEuint32, inputProof);
         
         salaries[msg.sender] = encryptedSalary;
@@ -52,7 +55,7 @@ contract SalaryCompare is SepoliaConfig {
     /// @notice Compare your salary with another user's salary
     /// @param otherUser The address of the user to compare with
     /// @dev Stores an encrypted boolean: true if msg.sender's salary > otherUser's salary
-    function compareSalaries(address otherUser) external {
+    function compareSalaries(address otherUser) external nonReentrant {
         require(hasSalary[msg.sender], "You have not submitted a salary yet");
         require(hasSalary[otherUser], "The other user has not submitted a salary yet");
         require(msg.sender != otherUser, "Cannot compare with yourself");
@@ -110,11 +113,19 @@ contract SalaryCompare is SepoliaConfig {
     function hasComparison(address user1, address user2) external view returns (bool) {
         return comparisonPerformed[user1][user2];
     }
+
+    // Reentrancy guard modifier
+    modifier nonReentrant() {
+        require(!locked, "Reentrant call detected");
+        locked = true;
+        _;
+        locked = false;
+    }
     
     /// @notice Update your encrypted salary
     /// @param inputEuint32 the new encrypted salary value
     /// @param inputProof the input proof
-    function updateSalary(externalEuint32 inputEuint32, bytes calldata inputProof) external {
+    function updateSalary(externalEuint32 inputEuint32, bytes calldata inputProof) external nonReentrant {
         euint32 encryptedSalary = FHE.fromExternal(inputEuint32, inputProof);
 
         salaries[msg.sender] = encryptedSalary;
@@ -129,7 +140,7 @@ contract SalaryCompare is SepoliaConfig {
     /// @notice Batch compare salaries with multiple users
     /// @param otherUsers Array of user addresses to compare with
     /// @dev Performs comparison with each user in the array, max 10 users per batch
-    function batchCompareSalaries(address[] calldata otherUsers) external {
+    function batchCompareSalaries(address[] calldata otherUsers) external nonReentrant {
         // Input validation
         require(otherUsers.length > 0, "Must provide at least one user to compare with");
         require(otherUsers.length <= 10, "Cannot compare with more than 10 users at once");

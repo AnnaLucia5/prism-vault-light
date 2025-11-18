@@ -174,6 +174,42 @@ export const useSalaryCompare = (parameters: {
     }
   }, [comparisonResult]);
 
+  // Complete state management recovery mechanism
+  useEffect(() => {
+    // Periodic state consistency check
+    const checkStateConsistency = () => {
+      // Check if decrypted data matches current encrypted handles
+      if (clearMySalary && clearMySalary.handle !== mySalary) {
+        console.warn("State inconsistency detected: clearMySalary handle mismatch");
+        setClearMySalary(undefined);
+        clearMySalaryRef.current = undefined;
+      }
+
+      if (clearComparisonResult && clearComparisonResult.handle !== comparisonResult) {
+        console.warn("State inconsistency detected: clearComparisonResult handle mismatch");
+        setClearComparisonResult(undefined);
+        clearComparisonResultRef.current = undefined;
+      }
+
+      // Reset loading states if operations completed
+      if (isDecryptingSalary && !mySalary) {
+        setIsDecryptingSalary(false);
+        isDecryptingSalaryRef.current = false;
+      }
+
+      if (isDecryptingComparison && !comparisonResult) {
+        setIsDecryptingComparison(false);
+        isDecryptingComparisonRef.current = false;
+      }
+    };
+
+    // Check immediately and then periodically
+    checkStateConsistency();
+    const interval = setInterval(checkStateConsistency, 5000); // Check every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [mySalary, comparisonResult, clearMySalary, clearComparisonResult, isDecryptingSalary, isDecryptingComparison]);
+
   // Refresh my salary
   const refreshMySalary = useCallback(async () => {
     if (!salaryCompare.address || !ethersReadonlyProvider || !ethersSigner) {

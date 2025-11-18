@@ -88,6 +88,10 @@ export const useSalaryCompare = (parameters: {
   const [retryCount, setRetryCount] = useState<number>(0);
   const [refreshRetryCount, setRefreshRetryCount] = useState<number>(0);
 
+  // State change detection and auto-reset
+  const prevMySalaryRef = useRef<string | undefined>(undefined);
+  const prevComparisonResultRef = useRef<string | undefined>(undefined);
+
   // Refs
   const salaryCompareRef = useRef<SalaryCompareInfoType | undefined>(undefined);
   const isSubmittingRef = useRef<boolean>(isSubmitting);
@@ -144,6 +148,31 @@ export const useSalaryCompare = (parameters: {
   useEffect(() => {
     checkHasSalary();
   }, [checkHasSalary]);
+
+  // State change detection and auto-reset
+  useEffect(() => {
+    if (prevMySalaryRef.current !== mySalary) {
+      // My salary changed, clear related decryption state
+      if (prevMySalaryRef.current && clearMySalaryRef.current?.handle === prevMySalaryRef.current) {
+        setClearMySalary(undefined);
+        clearMySalaryRef.current = undefined;
+        setMessage("Salary data updated. Previous decryption cleared.");
+      }
+      prevMySalaryRef.current = mySalary;
+    }
+  }, [mySalary]);
+
+  useEffect(() => {
+    if (prevComparisonResultRef.current !== comparisonResult) {
+      // Comparison result changed, clear related decryption state
+      if (prevComparisonResultRef.current && clearComparisonResultRef.current?.handle === prevComparisonResultRef.current) {
+        setClearComparisonResult(undefined);
+        clearComparisonResultRef.current = undefined;
+        setMessage("Comparison data updated. Previous decryption cleared.");
+      }
+      prevComparisonResultRef.current = comparisonResult;
+    }
+  }, [comparisonResult]);
 
   // Refresh my salary
   const refreshMySalary = useCallback(async () => {

@@ -11,6 +11,9 @@ import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
 /// @dev All salary comparisons are performed on-chain without decrypting sensitive information
 /// @dev SECURITY: Input proofs must be validated by FHE library to prevent invalid encrypted data
 contract SalaryCompare is SepoliaConfig {
+    // Version info
+    string public constant VERSION = "1.0.0";
+
     // Constants for gas optimization
     uint256 private constant MAX_BATCH_SIZE = 10;
     // Mapping from user address to their encrypted salary

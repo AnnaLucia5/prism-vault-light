@@ -5,10 +5,27 @@ import { useInMemoryStorage } from "../hooks/useInMemoryStorage";
 import { useMetaMaskEthersSigner } from "../hooks/metamask/useMetaMaskEthersSigner";
 import { useSalaryCompare } from "@/hooks/useSalaryCompare";
 import { errorNotDeployed } from "./ErrorNotDeployed";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAccount } from "wagmi";
 
 export const SalaryCompareDemo = () => {
+  // Memoize expensive computations
+  const buttonClass = useMemo(() => (
+    "inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 font-semibold text-white shadow-lg " +
+    "transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl transform hover:-translate-y-0.5 " +
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
+    "disabled:opacity-50 disabled:pointer-events-none disabled:transform-none"
+  ), []);
+
+  const inputClass = useMemo(() => (
+    "w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 " +
+    "focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-all duration-200 outline-none " +
+    "text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700"
+  ), []);
+
+  const cardClass = useMemo(() => (
+    "bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-2 border-gray-100 dark:border-gray-700"
+  ), []);
   const { storage: fhevmDecryptionSignatureStorage } = useInMemoryStorage();
   const { isConnected } = useAccount();
   const {
@@ -61,18 +78,6 @@ export const SalaryCompareDemo = () => {
     sameSigner,
   });
 
-  const buttonClass =
-    "inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 font-semibold text-white shadow-lg " +
-    "transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl transform hover:-translate-y-0.5 " +
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
-    "disabled:opacity-50 disabled:pointer-events-none disabled:transform-none";
-
-  const inputClass =
-    "w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 " +
-    "focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-all duration-200 outline-none " +
-    "text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700";
-
-  const cardClass = "bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-2 border-gray-100 dark:border-gray-700";
 
   if (!isConnected) {
     return (

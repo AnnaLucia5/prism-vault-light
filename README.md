@@ -8,13 +8,33 @@ Encrypted Salary Compare allows two colleagues to compare their salaries without
 
 ## ✨ Features
 
-- **Private Salary Submission**: Submit your salary as encrypted data
-- **Secure Comparison**: Compare salaries without revealing actual values
-- **Encrypted Results**: Get comparison results that only you can decrypt
-- **Rainbow Wallet Integration**: Easy wallet connection with modern UI
-- **Full Privacy**: All sensitive data remains encrypted throughout the entire process
-- **Real-time Notifications**: Get instant feedback on comparison status
-- **Multi-network Support**: Works on Sepolia testnet and local Hardhat network
+### 🔐 Privacy & Security
+- **End-to-End Encryption**: Salaries encrypted client-side using Zama FHEVM
+- **Zero-Knowledge Comparisons**: Compare without revealing actual values
+- **Access Control**: Only participants can view comparison results
+- **Reentrancy Protection**: Smart contract secured against reentrant attacks
+- **Input Validation**: Comprehensive address and data validation
+
+### 🚀 User Experience
+- **Modern UI**: Beautiful, responsive interface built with Next.js 15
+- **Wallet Integration**: Seamless connection with Rainbow Kit
+- **Real-time Feedback**: Live status updates and progress indicators
+- **Error Recovery**: Automatic retry mechanisms for network issues
+- **Smart Validation**: Real-time address format checking and guidance
+
+### ⚡ Performance & Reliability
+- **Multi-network Support**: Works on Sepolia testnet and local Hardhat
+- **Batch Operations**: Compare with multiple users in single transaction
+- **State Management**: Robust state synchronization and error recovery
+- **Automatic Cleanup**: Smart cleanup of stale decryption data
+- **Connection Resilience**: Handles network interruptions gracefully
+
+### 🛠️ Developer Features
+- **TypeScript**: Full type safety throughout the application
+- **Comprehensive Testing**: Hardhat tests for contracts and components
+- **Modular Architecture**: Clean separation of concerns
+- **Extensible Design**: Easy to add new comparison features
+- **Well-Documented**: Extensive inline documentation and guides
 
 ## 🛠️ Technology Stack
 
@@ -192,12 +212,56 @@ This project is licensed under the BSD-3-Clause-Clear License.
 - [Rainbow Kit](https://www.rainbowkit.com/) for wallet integration
 - [Hardhat](https://hardhat.org/) for development environment
 
+## 🛠️ Troubleshooting
+
+### Common Issues and Solutions
+
+#### "Invalid Ethereum address format"
+- **Cause**: Entered address doesn't follow Ethereum address format
+- **Solution**: Ensure addresses start with "0x" and contain exactly 42 characters
+
+#### "Network error: Unable to connect to blockchain"
+- **Cause**: Network connectivity issues or RPC endpoint problems
+- **Solution**: Check internet connection and try again; the app will automatically retry
+
+#### "Comparison not found: This comparison has not been performed yet"
+- **Cause**: Attempting to view results before performing comparison
+- **Solution**: Both users must submit salaries and perform comparison first
+
+#### "Access denied: You can only view comparisons you are part of"
+- **Cause**: Attempting to view comparison results without being a participant
+- **Solution**: Only the two users involved in a comparison can view its results
+
+#### "Reentrant call detected"
+- **Cause**: Multiple simultaneous operations attempted
+- **Solution**: Wait for current operation to complete before starting new ones
+
+### Performance Tips
+
+- Use a stable internet connection for best experience
+- MetaMask or compatible wallet recommended
+- Sepolia testnet provides faster transaction confirmation than mainnet
+
 ## 📧 Support
 
 For issues and questions, please open an issue on the GitHub repository.
+
+## 🎥 Demo Video
+
+Watch our comprehensive demonstration video showing the Encrypted Salary Compare application in action:
+
+[🔗 **Live Demo Video**](https://github.com/AnnaLucia5/prism-vault-light/raw/main/demo/salary-compare-demo.mp4)
+
+The video demonstrates:
+- Complete user workflow from wallet connection to salary comparison
+- Privacy-preserving salary submission using FHEVM encryption
+- Secure comparison without revealing actual salary amounts
+- Real-time decryption and result interpretation
+- Error handling and user experience features
 
 ## 🔗 Links
 
 - [Zama FHEVM Documentation](https://docs.zama.ai/fhevm)
 - [Rainbow Kit Documentation](https://www.rainbowkit.com/docs/introduction)
 - [Hardhat Documentation](https://hardhat.org/docs)
+- [Live Application Demo](https://prism-vault-light.vercel.app)

@@ -2,44 +2,28 @@
 
 A privacy-preserving salary comparison application built with Fully Homomorphic Encryption (FHE) using Zama's FHEVM.
 
-## 🌐 Live Demo & Resources
-
-- **🔗 Live Application**: [https://selfprivate.vercel.app/](https://selfprivate.vercel.app/)
-- **📹 Demo Video**: [Download demo video](demo-video.txt)
-- **📄 Sepolia Contract**: `0x76bD869D7F8Dd7DBbAcF219a3F5c17C25f9d7089`
-- **📊 Sepolia Testnet**: View contract on [Sepolia Etherscan](https://sepolia.etherscan.io/address/0x76bD869D7F8Dd7DBbAcF219a3F5c17C25f9d7089)
-
 ## 🔐 Overview
 
 Encrypted Salary Compare allows two colleagues to compare their salaries without revealing the actual amounts to each other. Using FHE technology, salary data is encrypted on the client-side and all comparisons are performed on encrypted data, ensuring complete privacy.
 
 ## ✨ Features
 
-- **Private Salary Submission**: Submit your salary as encrypted data with input validation
+- **Private Salary Submission**: Submit your salary as encrypted data
 - **Secure Comparison**: Compare salaries without revealing actual values
-- **Batch Comparison**: Compare with multiple users in a single transaction
 - **Encrypted Results**: Get comparison results that only you can decrypt
-- **Salary Updates**: Update your salary while maintaining privacy
 - **Rainbow Wallet Integration**: Easy wallet connection with modern UI
 - **Full Privacy**: All sensitive data remains encrypted throughout the entire process
 - **Real-time Notifications**: Get instant feedback on comparison status
-- **Keyboard Shortcuts**: Enhanced UX with Enter key submission
-- **Loading States**: Visual feedback during transactions
-- **Input Validation**: Real-time validation with helpful error messages
-- **Responsive Design**: Mobile-friendly interface with dark theme support
-- **Accessibility**: ARIA labels and screen reader support
 - **Multi-network Support**: Works on Sepolia testnet and local Hardhat network
 
 ## 🛠️ Technology Stack
 
-- **Smart Contracts**: Solidity ^0.8.24 with FHEVM library
+- **Smart Contracts**: Solidity with FHEVM library
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Blockchain**: Ethereum (Sepolia testnet and local Hardhat)
 - **Wallet**: Rainbow Kit for wallet connection
 - **Encryption**: Zama FHEVM (Fully Homomorphic Encryption)
-- **Styling**: Tailwind CSS with dark theme support
-- **Build Tools**: Hardhat, Vite, ESLint, Prettier
-- **Testing**: Hardhat, Chai, Vitest
+- **Testing**: Hardhat, Chai
 
 ## 📋 Prerequisites
 
@@ -177,22 +161,22 @@ Retrieve your own encrypted salary.
 Compare your salary with another user's salary.
 
 #### `batchCompareSalaries(address[] calldata otherUsers)`
-Compare your salary with multiple users in a single transaction (max 10 users).
+Compare your salary with multiple users in a single transaction.
 
 #### `getComparisonResult(address user1, address user2) returns (ebool)`
-Get the encrypted comparison result between two users.
+Get the encrypted comparison result.
 
 #### `updateSalary(externalEuint32 inputEuint32, bytes calldata inputProof)`
-Update your encrypted salary with proper validation.
+Update your encrypted salary.
 
 #### `hasComparison(address user1, address user2) returns (bool)`
 Check if a comparison has been performed between two users.
 
 ### Events
 
-- `SalarySubmitted(address indexed user, uint256 timestamp)`
-- `SalaryCompared(address indexed user1, address indexed user2, uint256 timestamp)`
-- `SalaryUpdated(address indexed user, uint256 timestamp)`
+- `SalarySubmitted(address indexed user)`
+- `SalaryCompared(address indexed user1, address indexed user2)`
+- `SalaryUpdated(address indexed user)`
 
 ## 🤝 Contributing
 

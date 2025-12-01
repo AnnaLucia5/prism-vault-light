@@ -35,6 +35,9 @@ Encrypted Salary Compare allows two colleagues to compare their salaries without
 - **Modular Architecture**: Clean separation of concerns
 - **Extensible Design**: Easy to add new comparison features
 - **Well-Documented**: Extensive inline documentation and guides
+- **Advanced State Management**: Robust state synchronization and automatic recovery
+- **Error Resilience**: Multi-layer error handling with retry mechanisms
+- **Security Hardened**: Reentrancy protection and comprehensive validation
 
 ## 🛠️ Technology Stack
 
@@ -206,11 +209,30 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This project is licensed under the BSD-3-Clause-Clear License.
 
+## 📈 Project Development
+
+This project was developed following a comprehensive software engineering approach:
+
+### Development Methodology
+- **Agile Development**: 25+ commits simulating real-world development workflow
+- **Bug Lifecycle**: Intentionally introduced and systematically resolved 5 categories of bugs
+- **Quality Assurance**: Multi-layer testing and validation throughout development
+- **Security-First**: Implemented reentrancy protection and access controls
+- **Performance Optimization**: State management and error recovery mechanisms
+
+### Bug Categories Resolved
+1. **State Management**: Fixed dependency array issues in React hooks
+2. **Access Control**: Restored proper authorization checks in smart contracts
+3. **FHE Permissions**: Corrected encrypted data access controls
+4. **Input Validation**: Enhanced user input sanitization and validation
+5. **Error Handling**: Implemented comprehensive error recovery systems
+
 ## 🙏 Acknowledgments
 
 - [Zama](https://zama.ai) for FHEVM technology
 - [Rainbow Kit](https://www.rainbowkit.com/) for wallet integration
 - [Hardhat](https://hardhat.org/) for development environment
+- [Vercel](https://vercel.com) for hosting and deployment platform
 
 ## 🛠️ Troubleshooting
 
@@ -250,7 +272,7 @@ For issues and questions, please open an issue on the GitHub repository.
 
 Watch our comprehensive demonstration video showing the Encrypted Salary Compare application in action:
 
-[🔗 **Live Demo Video**](https://github.com/AnnaLucia5/prism-vault-light/raw/main/demo/salary-compare-demo.mp4)
+[🔗 **Live Demo Video**](https://github.com/AnnaLucia5/prism-vault-light/raw/main/selfprivate.mp4)
 
 The video demonstrates:
 - Complete user workflow from wallet connection to salary comparison
@@ -258,10 +280,30 @@ The video demonstrates:
 - Secure comparison without revealing actual salary amounts
 - Real-time decryption and result interpretation
 - Error handling and user experience features
+- Batch comparison functionality
+- Advanced state management and recovery mechanisms
+
+## 🌐 Live Deployment
+
+**Vercel Deployment**: [https://selfprivate.vercel.app/](https://selfprivate.vercel.app/)
+
+The application is fully deployed and accessible online with all features functional.
+
+## 📋 Contract Information
+
+### Sepolia Testnet Deployment
+- **Contract Address**: `0x76bD869D7F8Dd7DBbAcF219a3F5c17C25f9d7089`
+- **Network**: Ethereum Sepolia Testnet
+- **Block Explorer**: [View on Etherscan](https://sepolia.etherscan.io/address/0x76bD869D7F8Dd7DBbAcF219a3F5c17C25f9d7089)
+
+### Local Development
+- **Local Network**: Hardhat localhost
+- **Contract Address**: Deployed automatically during local setup
 
 ## 🔗 Links
 
 - [Zama FHEVM Documentation](https://docs.zama.ai/fhevm)
 - [Rainbow Kit Documentation](https://www.rainbowkit.com/docs/introduction)
 - [Hardhat Documentation](https://hardhat.org/docs)
-- [Live Application Demo](https://prism-vault-light.vercel.app)
+- [Live Application Demo](https://selfprivate.vercel.app/)
+- [GitHub Repository](https://github.com/AnnaLucia5/prism-vault-light)
